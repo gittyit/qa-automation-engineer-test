@@ -5,14 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Debug File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
             "name": "Python: Flask",
             "type": "python",
             "request": "launch",
             "module": "flask",
+            "cwd": "${workspaceFolder}",
             "env": {
                 "FLASK_APP": "backend/app.py",
                 "FLASK_DEBUG": "1",
-                "PGPASSWORD": "Examplepass14"
+                "POSTGRES_HOST": "localhost",
+                "POSTGRES_PORT": "5440",
+                "POSTGRES_PASSWORD": "Examplepass14",
+                "PYTHONPATH": "${workspaceFolder}",
             },
             "args": [
                 "run",
@@ -20,7 +32,22 @@
                 "--no-reload"
             ],
             "jinja": true,
-            "justMyCode": true
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Launch File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "purpose": [
+                "debug-in-terminal"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "justMyCode": false
         }
     ]
 }

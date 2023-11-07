@@ -92,7 +92,9 @@ async def get_connection():
     try:
         # Establish a connection to a DB named "postgres"
         pw = os.environ.get('POSTGRES_PASSWORD')
-        cn = await asyncpg.connect(f'postgresql://postgres:{pw}@db:5432/postgres')
+        host = os.environ.get('POSTGRES_HOST')
+        port = os.environ.get('POSTGRES_PORT')
+        cn = await asyncpg.connect(f'postgresql://postgres:{pw}@{host}:{port}/postgres')
     except BaseException as Ex:
         msg = add_msg("Can't connect to the DB", Ex)
         return msg, Ex, ''
