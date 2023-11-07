@@ -6,5 +6,8 @@
     "python.testing.pytestEnabled": true,
     "python.analysis.extraPaths": [
         "./backend"
-    ]
+    ],
+    "[python]": {
+        "editor.formatOnSave": true
+    }
 }

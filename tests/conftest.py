@@ -1,10 +1,14 @@
 from flask import Flask
 import pytest
+import os
 
 from backend import create_app
 
+# pytest_plugins = "pytest-asyncio"
+
 @pytest.fixture
 def app():
+    os.environ['CONFIG_TYPE'] = 'config.TestingConfig'
     app = create_app({
         'TESTING': True,
     })
