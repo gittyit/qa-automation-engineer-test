@@ -1,11 +1,14 @@
-import pytest
-import backend.app as app
+""" Test for app
+"""
 import os
+import pytest
+
+from backend import app
 
 
 def test_me():
-    ''' Test to selfcheck the testing environment
-    - Returns always True value
+    ''' Selfcheck for the testing environment
+    - Always True
     '''
     assert True
 
@@ -14,7 +17,7 @@ def test_me():
 async def test_db_connection():
     ''' Establishes a new async DB connection:
     - Populates evironment variables with connection parameters
-    - Launches get_connection method directly
+    - Launches get_connection method (async)
     - Checks that there is no error messages or exceptions
     - Checks that the connection object is from asyncpg.connection.Connection class
     '''
@@ -24,7 +27,7 @@ async def test_db_connection():
     os.environ['POSTGRES_PASSWORD'] = "Examplepass14"
     # Get a new connection to the DB
     msg, ex_str, cn = await app.get_connection()
-    # assert msg == '' and ex_str == ''
+    assert msg == '' and ex_str == ''
     assert isinstance(cn, app.asyncpg.connection.Connection)
 
 
