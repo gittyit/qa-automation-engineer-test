@@ -74,7 +74,7 @@ async def index_page():
     return f"<p>{message}</p>"
 
 
-async def get_connection() -> (str, str, Connection):
+async def get_connection() -> Connection:
     ''' Gets a new DB connection with parameters from environment vars.
 
     In case of errors, raises ConnectionException.
@@ -85,16 +85,20 @@ async def get_connection() -> (str, str, Connection):
     '''
     try:
         # Get connection parameters from evironment vars
-        pw = os.environ.get('POSTGRES_PASSWORD')
-        host = os.environ.get('POSTGRES_HOST')
-        port = os.environ.get('POSTGRES_PORT')
+        pw = os.environ.get('POSTGRES_PASSWORD') or ""
+        host = os.environ.get('POSTGRES_HOST') or ""
+        port = os.environ.get('POSTGRES_PORT') or ""
 
         # Raise an error if any of the vars are not populated
         if not (pw and host and port):
-            raise Exception("Provide environment vars to connect to the DB")
+            raise Exc.ConnectionException(
+                "Provide host, port and password via environment vars:" +
+                f"\nPOSTGRES_PASSWORD={pw}\nPOSTGRES_HOST={host}\nPOSTGRES_PORT={port}")
 
         # Establish a connection to a DB named "postgres"
         cn = await asyncpg.connect(f'postgresql://postgres:{pw}@{host}:{port}/postgres')
+    except Exc.ConnectionException as ex:
+        raise ex
     except BaseException as ex:
         raise Exc.ConnectionException("Can't connect to the DB") from ex
     return cn

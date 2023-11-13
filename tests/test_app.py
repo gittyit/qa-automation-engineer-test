@@ -25,9 +25,12 @@ async def test_db_connection():
     os.environ['POSTGRES_HOST'] = "localhost"
     os.environ['POSTGRES_PORT'] = "5440"
     os.environ['POSTGRES_PASSWORD'] = "Examplepass14"
-    # Get a new connection to the DB
-    msg, ex_str, cn = await app.get_connection()
-    assert msg == '' and ex_str == ''
+
+    try:
+        cn = await app.get_connection()
+    except BaseException as ex:
+        pytest.fail(str(ex))
+
     assert isinstance(cn, app.asyncpg.connection.Connection)
 
 
