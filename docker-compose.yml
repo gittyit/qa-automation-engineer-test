@@ -7,7 +7,7 @@ services:
     image: postgres:15.4-bookworm
     restart: always
     environment:
-      POSTGRES_PASSWORD: Examplepass14
+      POSTGRES_PASSWORD: Examplepass17837
     ports:
       - "5440:5432"
     expose:
@@ -21,7 +21,7 @@ services:
     environment:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
-      POSTGRES_PASSWORD: Examplepass14
+      POSTGRES_PASSWORD: Examplepass17837
     ports:
       - "8000:8000"
     depends_on:
