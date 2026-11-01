@@ -4,5 +4,15 @@
     <p style='color:Tomato'>{{msg}}</p>
 {% else %}
   <button onclick="window.location.href='/execute_test'">Execute test</button>
-  <button onclick="window.location.href='/download_data'">Download data</button>
+  <form method="post" action="/upload_data" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+  </form>
+  
+  {# <a  href="/download/1.csv">Download</a> #}
+  <button onclick="window.location.href='/download/1.csv'">Download data</button>
+  
+  {# doesn't work: #}
+  {# <a href="{{ url_for('download_file', name='1.csv') }}">Download data</a> #}
+
 {% endif %}

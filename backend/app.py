@@ -2,18 +2,24 @@
 - Index page --> Creates DB tables and populates it (async)
 - Result page --> Retrieves the data from DB tables in JSON (async)
 '''
+import os
 import asyncio
-
-# from get_db import dbManager
 
 from get_db import dbManager
 
-from flask import Flask
-from flask import render_template as Render
-from flask import jsonify
+from flask import Flask, flash, get_flashed_messages
+from flask import request, render_template as Render
+from flask import jsonify, send_file, send_from_directory
+
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 dbm = dbManager()
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'txt', 'csv'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route('/result')
 async def result_page():
@@ -61,10 +67,43 @@ async def execute_test():
         return Render("error.html", error_msg=str(ex))
     return Render("test_executed.html")
 
+
+@app.route("/download/<name>")
+def download_file(name):
+    return send_from_directory("uploads", name)
+        # app.config['UPLOAD_FOLDER']
+        # , as_attachment=True
+
+@app.route("/upload_data", methods=['POST'])
+async def upload_data():
+    if 'file' not in request.files:
+        flash('No file part')
+        print('No file part')
+        msgs = ""
+        [ msgs.join(msg) for msg in get_flashed_messages()]
+        print(f"msgs={msgs}")
+        return Render("error.html", error_msg=str(msgs))
+    file = request.files["file"]
+    if file.filename == '':
+        print('No selected file')
+        msg = 'No selected file'
+        return Render("error.html", error_msg=str(msg))
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        print(f"Uploading.. {filename}")
+        file_path = "/".join([os.getcwd(), app.config['UPLOAD_FOLDER'], filename])
+        print(f"cwd={os.getcwd()}")
+        print(f"path={file_path}")
+        file.save(file_path)
+        return 'File uploaded successfully', 200
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 # @app.route("/download_data")
 # async def download_data():
 #     await dbm.create_and_populate_all_tables()
 #     return Render("test_executed.html")
-
-
 
