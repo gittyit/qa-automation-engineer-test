@@ -52,6 +52,25 @@ async def index_page():
         - errors, returns an error page with details
         - success, returns success message
     '''
+    return Render("index.html")
+
+@app.route("/execute_test")
+async def execute_test():
+    await create_and_populate_tables()
+    return Render("test_executed.html")
+
+async def create_and_populate_tables():
+    ''' Create and populate tables method.
+
+    - Creates 3 data tables in DB.
+    - Populates the tables with a following data:
+        - Table data_1: IDs 1-10, 31-40;
+        - Table data_2: IDs 11-20, 41-50;
+        - Table data_3: IDs 21-30, 51-60;
+    - In case of:
+        - errors, returns an error page with details
+        - success, returns success message
+    '''
     try:
         # Open a new connection to the DB
         cn = await get_connection()
@@ -64,14 +83,13 @@ async def index_page():
 
         # Populate it with data
         await populate_tables(cn)
+
+        # Close the connection
+        await cn.close()
+
     except BaseException as ex:
         return Render("error.html", error_msg=str(ex))
 
-    # Close the connection
-    await cn.close()
-
-    message = 'Tables are created and populated!'
-    return f"<p>{message}</p>"
 
 
 async def get_connection() -> Connection:
