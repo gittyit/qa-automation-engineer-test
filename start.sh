@@ -7,4 +7,5 @@ cd backend
 export POSTGRES_PASSWORD="Examplepass17837"
 export POSTGRES_HOST="127.0.0.1"
 export POSTGRES_PORT="5532"
+export PYTHONPATH=.
 flask run --reload
